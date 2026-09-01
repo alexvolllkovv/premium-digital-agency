@@ -7,6 +7,7 @@ import { Toaster } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { Route, Switch } from "wouter";
 import ErrorBoundary from "./components/ErrorBoundary";
+import CustomCursor from "./components/CustomCursor";
 import { ThemeProvider } from "./contexts/ThemeContext";
 import Contacts from "./pages/Contacts";
 import Home from "./pages/Home";
@@ -36,5 +37,5 @@ export default function App() {
     canonical.href = window.location.href;
   }, []);
 
-  return <ErrorBoundary><ThemeProvider defaultTheme="dark"><TooltipProvider><Toaster /><Router /></TooltipProvider></ThemeProvider></ErrorBoundary>;
+  return <ErrorBoundary><ThemeProvider defaultTheme="dark" switchable><TooltipProvider><Toaster /><CustomCursor /><Router /></TooltipProvider></ThemeProvider></ErrorBoundary>;
 }

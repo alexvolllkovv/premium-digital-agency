@@ -34,6 +34,14 @@ const services = [
   { number: "06", title: "Оптимизация\nкампаний", text: "Проверка гипотез и последовательное улучшение рекламной системы.", icon: Gauge, detail: "ПОСЛЕДОВАТЕЛНОЕ УЛУЧШЕНИЕ" },
 ];
 
+const analysisAreas = [
+  ["01", "Структура кампаний", "Проверяем логику групп, объявлений, целей и распределения бюджета."],
+  ["02", "Путь пользователя", "Смотрим, как человек проходит путь от первого сигнала до действия."],
+  ["03", "Качество сигнала", "Отделяем полезные данные от шума и находим точки потери эффективности."],
+  ["04", "Стоимость обращения", "Сопоставляем вложения и обращения, чтобы видеть реальную цену контакта."],
+  ["05", "Гипотезы роста", "Формируем следующие проверки и приоритеты для последовательного улучшения."],
+] as const;
+
 const approach = [
   ["01", "Анализ", "Изучаем продукт, аудиторию, текущие данные и бизнес-задачу."],
   ["02", "Стратегия", "Определяем каналы, гипотезы и точки контроля рекламной системы."],
@@ -58,8 +66,8 @@ const audiences = [
 
 function HeroConsole() {
   return (
-    <div className="hero-console" aria-label="Демонстрационная аналитическая схема">
-      <img className="console-art" src="/manus-storage/hero-analytical-console_859f088b.png" alt="Абстрактная аналитическая визуализация" />
+    <div className="hero-console" data-reveal="hero" aria-label="Демонстрационная аналитическая схема">
+      <img className="console-art" src="/manus-storage/hero-analytical-cockpit-ab_55c098ab.png" alt="Абстрактная аналитическая визуализация" />
       <div className="console-overlay" />
       <div className="console-ruler console-ruler-top"><span>СИСТЕМА КОНТРОЛЯ</span><i /></div>
       <div className="console-card console-card-primary">
@@ -98,6 +106,22 @@ export default function Home() {
       serviceType: ["Контекстная реклама", "Таргетированная реклама", "SMM", "Аналитика рекламных кампаний"],
     });
     document.head.appendChild(schema);
+
+    const revealItems = Array.from(document.querySelectorAll<HTMLElement>("[data-reveal]"));
+    const prefersReducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    if (prefersReducedMotion || !("IntersectionObserver" in window)) {
+      revealItems.forEach((item) => item.classList.add("is-visible"));
+    } else {
+      const observer = new IntersectionObserver((entries) => {
+        entries.forEach((entry) => {
+          if (!entry.isIntersecting) return;
+          entry.target.classList.add("is-visible");
+          observer.unobserve(entry.target);
+        });
+      }, { threshold: 0.12, rootMargin: "0px 0px -8%" });
+      revealItems.forEach((item) => observer.observe(item));
+      return () => { observer.disconnect(); schema.remove(); };
+    }
     return () => schema.remove();
   }, []);
 
@@ -115,7 +139,7 @@ export default function Home() {
           <div className="hero-grid-line hero-grid-line-one" aria-hidden="true" />
           <div className="hero-grid-line hero-grid-line-two" aria-hidden="true" />
           <div className="hero-content">
-            <div className="hero-copy">
+            <div className="hero-copy" data-reveal="hero">
               <p className="eyebrow hero-eyebrow"><span className="eyebrow-dot" /> ЦИФРОВАЯ РЕКЛАМА <b /> АНАЛИТИКА <b /> ОПТИМИЗАЦИЯ</p>
               <h1>Реклама,<br />которой можно<br /><em>управлять.</em></h1>
               <p className="hero-description">Настраиваем и ведём digital-рекламу для компаний и предпринимателей — от запуска кампаний до аналитики и оптимизации результата.</p>
@@ -132,7 +156,7 @@ export default function Home() {
           </div>
         </section>
 
-        <section className="about section-frame" id="about">
+        <section className="about section-frame" id="about" data-reveal="section">
           <div className="about-header"><SectionTag>01 / О КОМПАНИИ</SectionTag><p className="micro-copy">БЕЗ ЛИШНЕГО ШУМА</p></div>
           <div className="about-layout">
             <div className="about-copy">
@@ -144,18 +168,18 @@ export default function Home() {
             <div className="data-column">
               <img src="/manus-storage/system-geometry_1a1c7b93.png" alt="Абстрактная система аналитических связей" loading="lazy" />
               <div className="data-ladder" aria-label="Этапы рекламной системы">
-                {["DATA", "TRAFFIC", "CONVERSION", "ANALYSIS", "OPTIMIZATION"].map((label, index) => <div key={label}><span>0{index + 1}</span><strong>{label}</strong>{index < 4 && <i aria-hidden="true" />}</div>)}
+                {["ДАННЫЕ", "ТРАФИК", "КОНВЕРСИЯ", "АНАЛИЗ", "ОПТИМИЗАЦИЯ"].map((label, index) => <div key={label}><span>0{index + 1}</span><strong>{label}</strong>{index < 4 && <i aria-hidden="true" />}</div>)}
               </div>
             </div>
           </div>
         </section>
 
-        <section className="services section-frame" id="services">
+        <section className="services section-frame" id="services" data-reveal="section">
           <div className="section-head split-head"><div><SectionTag>02 / УСЛУГИ</SectionTag><h2>Шесть направлений.<br /><em>Одна система контроля.</em></h2></div><p>Выбираем не модные инструменты, а то, что соответствует задаче, данным и логике рекламной кампании.</p></div>
           <div className="services-grid">
             {services.map((service) => {
               const Icon = service.icon;
-              return <article className="service-card" data-service={service.number} key={service.number}>
+              return <article className="service-card" data-service={service.number} data-reveal="card" key={service.number}>
                 <div className="service-top"><span>{service.number}</span><Icon size={19} strokeWidth={1.45} /></div>
                 <div className="service-graphic" aria-hidden="true"><i /><i /><i /><b /></div>
                 <p className="service-detail">{service.detail}</p>
@@ -167,34 +191,39 @@ export default function Home() {
           </div>
         </section>
 
-        <section className="approach section-frame" id="approach">
-          <div className="approach-top"><SectionTag>03 / НАШ ПОДХОД</SectionTag><div><h2>Не просто запускаем рекламу.<br /><em>Строим систему.</em></h2><p>Прозрачная последовательность помогает связать решение с задачей, а действие — с наблюдаемым сигналом.</p></div></div>
+        <section className="analysis-section section-frame" id="analysis" data-reveal="section">
+          <div className="analysis-heading"><SectionTag>03 / ЧТО АНАЛИЗИРУЕМ</SectionTag><h2>Смотрим глубже,<br /><em>чем просто клики.</em></h2><p>До запуска и в процессе работы раскладываем рекламную систему на понятные точки контроля — без неподтверждённых обещаний и декоративных цифр.</p></div>
+          <div className="analysis-grid">{analysisAreas.map(([number, title, text]) => <article className="analysis-card" data-reveal="card" key={number}><span>{number}</span><div className="analysis-orbit" aria-hidden="true"><i /><i /><b /></div><h3>{title}</h3><p>{text}</p><ArrowUpRight size={17} /></article>)}</div>
+        </section>
+
+        <section className="approach section-frame" id="approach" data-reveal="section">
+          <div className="approach-top"><SectionTag>04 / НАШ ПОДХОД</SectionTag><div><h2>Не просто запускаем рекламу.<br /><em>Строим систему.</em></h2><p>Прозрачная последовательность помогает связать решение с задачей, а действие — с наблюдаемым сигналом.</p></div></div>
           <div className="approach-timeline">
             <div className="timeline-track" aria-hidden="true"><i /><i /><i /><i /></div>
             {approach.map(([number, title, text], index) => <article className="approach-step" key={number}><div className="step-node"><span>{number}</span><b /></div><h3>{title}</h3><p>{text}</p><span className="step-meta">CONTROL / 0{index + 1}</span></article>)}
           </div>
         </section>
 
-        <section className="signal-flow section-frame">
+        <section className="signal-flow section-frame" data-reveal="section">
           <div className="signal-art"><img src="/manus-storage/funnel-signal-flow_1efa831a.png" alt="Схема движения сигнала в рекламной системе" loading="lazy" /></div>
-          <div className="signal-content"><SectionTag>04 / СИСТЕМНОЕ МЫШЛЕНИЕ</SectionTag><h2>Клик — это<br />только <em>начало.</em></h2><p>Оценивать рекламу только по количеству кликов недостаточно. Важно видеть всю цепочку взаимодействия пользователя с бизнесом.</p><a className="text-link" href="#process">Смотреть процесс работы <ArrowUpRight size={16} /></a></div>
+          <div className="signal-content"><SectionTag>05 / СИСТЕМНОЕ МЫШЛЕНИЕ</SectionTag><h2>Клик — это<br />только <em>начало.</em></h2><p>Оценивать рекламу только по количеству кликов недостаточно. Важно видеть всю цепочку взаимодействия пользователя с бизнесом.</p><a className="text-link" href="#process">Смотреть процесс работы <ArrowUpRight size={16} /></a></div>
           <div className="funnel-chain" aria-label="Цепочка взаимодействия пользователя"><div><span>01</span>Показы</div><i /><div><span>02</span>Клик</div><i /><div><span>03</span>Посещение</div><i /><div><span>04</span>Действие</div><i /><div><span>05</span>Заявка</div><i /><div><span>06</span>Клиент</div></div>
         </section>
 
-        <section className="process section-frame" id="process">
-          <div className="section-head process-head"><div><SectionTag>05 / ПРОЦЕСС РАБОТЫ</SectionTag><h2>От первого разговора<br />до <em>следующего решения.</em></h2></div><div className="process-legend"><span><i />ТОЧКА КОНТРОЛЯ</span><span><i />СИСТЕМНЫЙ ШАГ</span></div></div>
+        <section className="process section-frame" id="process" data-reveal="section">
+          <div className="section-head process-head"><div><SectionTag>06 / ПРОЦЕСС РАБОТЫ</SectionTag><h2>От первого разговора<br />до <em>следующего решения.</em></h2></div><div className="process-legend"><span><i />ТОЧКА КОНТРОЛЯ</span><span><i />СИСТЕМНЫЙ ШАГ</span></div></div>
           <div className="process-list">{process.map(([number, title, text]) => <article key={number}><span className="process-number">{number}</span><h3>{title}</h3><p>{text}</p><span className="process-plus">+</span></article>)}</div>
         </section>
 
-        <section className="audiences section-frame">
-          <div className="audiences-header"><SectionTag>06 / КОМУ ПОДХОДИТ</SectionTag><h2>Работаем с задачами,<br />где важны <em>данные и результат.</em></h2></div>
+        <section className="audiences section-frame" data-reveal="section">
+          <div className="audiences-header"><SectionTag>07 / КОМУ ПОДХОДИТ</SectionTag><h2>Работаем с задачами,<br />где важны <em>данные и результат.</em></h2></div>
           <div className="audience-grid">{audiences.map(([number, title, text]) => <article key={number}><span>{number}</span><div className="audience-cross" aria-hidden="true" /><h3>{title}</h3><p>{text}</p></article>)}</div>
         </section>
 
-        <section className="contact-section section-frame" id="contacts">
+        <section className="contact-section section-frame" id="contacts" data-reveal="section">
           <img className="contact-art" src="/manus-storage/closing-orbit_abe4c2dc.png" alt="Абстрактная тёмная композиция с золотой орбитой" loading="lazy" />
           <div className="contact-inner">
-            <div className="contact-copy"><SectionTag>07 / КОНТАКТЫ</SectionTag><h2>Обсудим<br /><em>задачу?</em></h2><p>Расскажите, что хотите получить от digital-рекламы. Чем точнее исходный контекст, тем предметнее будет первый разговор.</p><Link className="text-link" href="/contacts">Контактная информация <ArrowUpRight size={16} /></Link></div>
+            <div className="contact-copy"><SectionTag>08 / КОНТАКТЫ</SectionTag><h2>Обсудим<br /><em>задачу?</em></h2><p>Расскажите, что хотите получить от digital-рекламы. Чем точнее исходный контекст, тем предметнее будет первый разговор.</p><Link className="text-link" href="/contacts">Контактная информация <ArrowUpRight size={16} /></Link></div>
             <form className="contact-form" onSubmit={handleSubmit}>
               <div className="form-grid"><label><span>Имя</span><input name="name" type="text" autoComplete="name" required placeholder="Как к вам обращаться" /></label><label><span>Компания</span><input name="company" type="text" autoComplete="organization" placeholder="Название компании" /></label><label><span>Телефон</span><input name="phone" type="tel" autoComplete="tel" required placeholder="+7" /></label><label><span>Email</span><input name="email" type="email" autoComplete="email" required placeholder="name@company.ru" /></label></div>
               <label className="full-field"><span>Комментарий</span><textarea name="comment" rows={3} placeholder="Кратко опишите задачу" /></label>

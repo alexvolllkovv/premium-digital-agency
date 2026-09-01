@@ -3,8 +3,9 @@
  * and compact; navigation should feel like a calm control surface, never a banner.
  */
 import { useEffect, useState } from "react";
-import { Menu, X } from "lucide-react";
+import { Menu, Moon, Sun, X } from "lucide-react";
 import SignalLogo from "@/components/SignalLogo";
+import { useTheme } from "@/contexts/ThemeContext";
 
 const navigation = [
   ["О компании", "#about"],
@@ -17,6 +18,7 @@ const navigation = [
 export default function SiteHeader() {
   const [open, setOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
+  const { theme, toggleTheme } = useTheme();
 
   useEffect(() => {
     const updateHeader = () => setScrolled(window.scrollY > 20);
@@ -41,6 +43,10 @@ export default function SiteHeader() {
             <a href={href} key={href}>{label}</a>
           ))}
         </nav>
+        <button className="theme-toggle" type="button" onClick={toggleTheme} aria-label={theme === "dark" ? "Включить светлую тему" : "Включить тёмную тему"} aria-pressed={theme === "dark"}>
+          {theme === "dark" ? <Sun size={15} /> : <Moon size={15} />}
+          <span>{theme === "dark" ? "Светлая" : "Тёмная"}</span>
+        </button>
         <a className="header-cta" href="#contacts">
           <span>Обсудить задачу</span>
           <span className="cta-pip" aria-hidden="true" />
