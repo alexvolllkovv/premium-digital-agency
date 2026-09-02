@@ -22,9 +22,9 @@ interface ThemeProviderProps {
 
 function getInitialTheme(defaultTheme: Theme): Theme {
   if (typeof window === "undefined") return defaultTheme;
-  const stored = window.localStorage.getItem("theme");
+  const stored = window.localStorage.getItem("theme-v2");
   if (stored === "light" || stored === "dark") return stored;
-  return window.matchMedia?.("(prefers-color-scheme: light)").matches ? "light" : defaultTheme;
+  return defaultTheme;
 }
 
 export function ThemeProvider({ children, defaultTheme = "light", switchable = false }: ThemeProviderProps) {
@@ -34,14 +34,14 @@ export function ThemeProvider({ children, defaultTheme = "light", switchable = f
     const root = document.documentElement;
     root.classList.toggle("dark", theme === "dark");
     root.dataset.theme = theme;
-    if (switchable) window.localStorage.setItem("theme", theme);
+    if (switchable) window.localStorage.setItem("theme-v2", theme);
   }, [theme, switchable]);
 
   useEffect(() => {
     if (!switchable) return;
     const media = window.matchMedia?.("(prefers-color-scheme: dark)");
     if (!media) return;
-    const stored = window.localStorage.getItem("theme");
+    const stored = window.localStorage.getItem("theme-v2");
     if (stored) return;
     const sync = (event: MediaQueryListEvent) => setTheme(event.matches ? "dark" : "light");
     media.addEventListener?.("change", sync);
