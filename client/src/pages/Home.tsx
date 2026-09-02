@@ -42,6 +42,17 @@ const analysisAreas = [
   ["05", "Гипотезы роста", "Формируем следующие проверки и приоритеты для последовательного улучшения."],
 ] as const;
 
+const faqItems = [
+  ["С чего начинается работа?", "С короткого разбора контекста бизнеса, текущей рекламы, целей и доступных данных. После этого определяем ближайший предметный шаг."],
+  ["Можно ли начать, если реклама уже запущена?", "Да. Сначала изучаем структуру кампаний, аналитику и точки потери эффективности, а затем предлагаем порядок улучшений."],
+  ["Какие рекламные каналы вы используете?", "Каналы выбираются под задачу, аудиторию, данные и ограничения проекта — без универсального набора инструментов."],
+  ["Что нужно подготовить до старта?", "Описание задачи, доступные материалы, текущие данные и желаемый формат связи. Если чего-то не хватает, это уточняется на первом разговоре."],
+  ["Как вы понимаете, что рекламу нужно оптимизировать?", "По качеству сигналов на разных этапах пользовательского пути, а не только по количеству кликов."],
+  ["Можно ли подключить только аналитику или ведение кабинета?", "Формат работы определяется после первичного разбора: можно обсудить отдельное направление или системное сопровождение."],
+  ["Как выглядит первый контакт?", "Это короткий предметный разговор о задаче, контексте и возможном следующем шаге — без лишних презентаций и обещаний."],
+  ["Работаете ли вы с предпринимателями и небольшими командами?", "Да, если есть понятная задача и готовность принимать решения на основе данных."],
+] as const;
+
 const approach = [
   ["01", "Анализ", "Изучаем продукт, аудиторию, текущие данные и бизнес-задачу."],
   ["02", "Стратегия", "Определяем каналы, гипотезы и точки контроля рекламной системы."],
@@ -65,24 +76,19 @@ const audiences = [
 ] as const;
 
 function HeroConsole() {
+  const controlNodes = ["ДАННЫЕ", "ТРАФИК", "КОНВЕРСИЯ", "АНАЛИЗ", "ОПТИМИЗАЦИЯ"];
   return (
-    <div className="hero-console" data-reveal="hero" aria-label="Демонстрационная аналитическая схема">
-      <img className="console-art" src="/manus-storage/hero-analytical-cockpit-ab_55c098ab.png" alt="Абстрактная аналитическая визуализация" />
+    <div className="hero-console control-console" data-reveal="hero" aria-label="Схема управления рекламной системой">
+      <img className="console-art" src="/manus-storage/hero-analytical-cockpit-ab_55c098ab.png" alt="Скульптурная аналитическая система с орбитами и панелями" />
       <div className="console-overlay" />
-      <div className="console-ruler console-ruler-top"><span>СИСТЕМА КОНТРОЛЯ</span><i /></div>
-      <div className="console-card console-card-primary">
-        <div className="console-card-head"><span>ДИНАМИКА СИГНАЛОВ</span><TrendingUp size={14} /></div>
-        <svg viewBox="0 0 260 92" role="img" aria-label="Схематичный растущий график без значений">
-          <path className="grid-line" d="M0 22 H260 M0 46 H260 M0 70 H260" />
-          <path className="chart-area" d="M0 83 C25 76 34 66 52 71 C71 77 74 48 98 55 C119 61 126 35 147 46 C168 57 183 31 201 36 C223 42 231 18 260 11 V92 H0Z" />
-          <path className="chart-line" d="M0 83 C25 76 34 66 52 71 C71 77 74 48 98 55 C119 61 126 35 147 46 C168 57 183 31 201 36 C223 42 231 18 260 11" />
-          <circle className="chart-node" cx="201" cy="36" r="4" />
-        </svg>
-      </div>
-      <div className="console-card console-card-small"><MousePointer2 size={16} /><span>КЛИКИ</span><i /></div>
-      <div className="console-card console-card-small console-card-two"><CircleDot size={16} /><span>ДЕЙСТВИЯ</span><i /></div>
-      <div className="console-card console-card-pulse"><span>СТОИМОСТЬ ОБРАЩЕНИЯ</span><div className="pulse-bars"><i /><i /><i /><i /><i /><i /><i /></div></div>
-      <div className="console-node console-node-a" /><div className="console-node console-node-b" /><div className="console-node console-node-c" />
+      <div className="control-console-header"><span>СИСТЕМА КОНТРОЛЯ</span><i /><b>LIVE / 01</b></div>
+      <div className="control-rail control-rail-left" aria-hidden="true" />
+      <div className="control-rail control-rail-right" aria-hidden="true" />
+      <div className="control-core"><div className="control-core-ring" /><div className="control-core-dot" /><span>РЕШЕНИЕ</span></div>
+      {controlNodes.map((label, index) => <div className={`control-node control-node-${index + 1}`} key={label}><span>0{index + 1}</span><strong>{label}</strong><i /></div>)}
+      <div className="control-metric control-metric-top"><span>КАЧЕСТВО СИГНАЛА</span><strong>СТАБИЛЬНО</strong><i><b /><b /><b /><b /><b /></i></div>
+      <div className="control-metric control-metric-bottom"><span>СЛЕДУЮЩИЙ ШАГ</span><strong>ОПТИМИЗАЦИЯ</strong><ArrowUpRight size={14} /></div>
+      <div className="control-legend"><span>СИГНАЛ</span><i /><span>ДЕЙСТВИЕ</span><i /><span>ВЫВОД</span></div>
     </div>
   );
 }
@@ -93,6 +99,7 @@ function SectionTag({ children }: { children: string }) {
 
 export default function Home() {
   const [sent, setSent] = useState(false);
+  const [openFaq, setOpenFaq] = useState<number | null>(0);
 
   useEffect(() => {
     document.title = "Цифровое рекламное агентство — контекстная и таргетированная реклама";
@@ -165,11 +172,11 @@ export default function Home() {
               <p>Наша задача — не просто привести трафик. Важно понимать, откуда он приходит, как ведёт себя пользователь и на каком этапе возникает потеря эффективности.</p>
               <a href="#approach" className="text-link">Как устроен подход <ArrowUpRight size={16} /></a>
             </div>
-            <div className="data-column">
-              <img src="/manus-storage/system-geometry_1a1c7b93.png" alt="Абстрактная система аналитических связей" loading="lazy" />
-              <div className="data-ladder" aria-label="Этапы рекламной системы">
-                {["ДАННЫЕ", "ТРАФИК", "КОНВЕРСИЯ", "АНАЛИЗ", "ОПТИМИЗАЦИЯ"].map((label, index) => <div key={label}><span>0{index + 1}</span><strong>{label}</strong>{index < 4 && <i aria-hidden="true" />}</div>)}
-              </div>
+            <div className="signal-map" data-reveal="card" aria-label="Сигнальная карта рекламной системы">
+              <div className="signal-map-top"><span>СИГНАЛЬНАЯ КАРТА</span><i /><b>05 ШАГОВ</b></div>
+              <div className="signal-map-route" aria-hidden="true"><i /><i /><i /><i /></div>
+              <div className="signal-map-list">{["ДАННЫЕ", "ТРАФИК", "КОНВЕРСИЯ", "АНАЛИЗ", "ОПТИМИЗАЦИЯ"].map((label, index) => <div className="signal-map-step" key={label}><span>0{index + 1}</span><strong>{label}</strong><small>{["Контекст", "Внимание", "Действие", "Вывод", "Улучшение"][index]}</small><b /></div>)}</div>
+              <div className="signal-map-foot"><span>КАЖДЫЙ ЭТАП ОСТАВЛЯЕТ ПРОВЕРЯЕМЫЙ СИГНАЛ</span><ArrowUpRight size={14} /></div>
             </div>
           </div>
         </section>
@@ -220,10 +227,15 @@ export default function Home() {
           <div className="audience-grid">{audiences.map(([number, title, text]) => <article key={number}><span>{number}</span><div className="audience-cross" aria-hidden="true" /><h3>{title}</h3><p>{text}</p></article>)}</div>
         </section>
 
+        <section className="faq-section section-frame" id="faq" data-reveal="section">
+          <div className="faq-heading"><SectionTag>08 / FAQ</SectionTag><div><h2>Вопросы перед<br /><em>первым шагом.</em></h2><p>Коротко отвечаем на то, что обычно важно понять до начала работы.</p></div></div>
+          <div className="faq-list">{faqItems.map(([question, answer], index) => { const isOpen = openFaq === index; return <article className={`faq-item ${isOpen ? "is-open" : ""}`} key={question}><button type="button" className="faq-trigger" aria-expanded={isOpen} aria-controls={`faq-answer-${index}`} onClick={() => setOpenFaq(isOpen ? null : index)}><span className="faq-number">0{index + 1}</span><span>{question}</span><i aria-hidden="true">+</i></button><div className="faq-answer" id={`faq-answer-${index}`} role="region" aria-hidden={!isOpen}><p>{answer}</p></div></article>; })}</div>
+        </section>
+
         <section className="contact-section section-frame" id="contacts" data-reveal="section">
           <img className="contact-art" src="/manus-storage/closing-orbit_abe4c2dc.png" alt="Абстрактная тёмная композиция с золотой орбитой" loading="lazy" />
           <div className="contact-inner">
-            <div className="contact-copy"><SectionTag>08 / КОНТАКТЫ</SectionTag><h2>Обсудим<br /><em>задачу?</em></h2><p>Расскажите, что хотите получить от digital-рекламы. Чем точнее исходный контекст, тем предметнее будет первый разговор.</p><Link className="text-link" href="/contacts">Контактная информация <ArrowUpRight size={16} /></Link></div>
+            <div className="contact-copy"><SectionTag>09 / КОНТАКТЫ</SectionTag><h2>Обсудим<br /><em>задачу?</em></h2><p>Расскажите, что хотите получить от digital-рекламы. Чем точнее исходный контекст, тем предметнее будет первый разговор.</p><Link className="text-link" href="/contacts">Контактная информация <ArrowUpRight size={16} /></Link></div>
             <form className="contact-form" onSubmit={handleSubmit}>
               <div className="form-grid"><label><span>Имя</span><input name="name" type="text" autoComplete="name" required placeholder="Как к вам обращаться" /></label><label><span>Компания</span><input name="company" type="text" autoComplete="organization" placeholder="Название компании" /></label><label><span>Телефон</span><input name="phone" type="tel" autoComplete="tel" required placeholder="+7" /></label><label><span>Email</span><input name="email" type="email" autoComplete="email" required placeholder="name@company.ru" /></label></div>
               <label className="full-field"><span>Комментарий</span><textarea name="comment" rows={3} placeholder="Кратко опишите задачу" /></label>

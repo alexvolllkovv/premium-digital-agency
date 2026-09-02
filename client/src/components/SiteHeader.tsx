@@ -12,6 +12,7 @@ const navigation = [
   ["Услуги", "#services"],
   ["Подход", "#approach"],
   ["Процесс", "#process"],
+  ["FAQ", "#faq"],
   ["Контакты", "#contacts"],
 ] as const;
 
