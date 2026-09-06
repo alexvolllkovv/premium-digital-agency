@@ -20,8 +20,9 @@ describe("contact.submit", () => {
     });
 
     expect(result.accepted).toBe(false);
-    expect(result.configured).toBe(false);
+    expect(result.configured).toBe(true);
     expect(result.recipient).toBe("eridpro@yandex.ru");
+    expect(result.message).toContain("demo-режиме");
   });
 
   it("rejects invalid email before any delivery attempt", async () => {

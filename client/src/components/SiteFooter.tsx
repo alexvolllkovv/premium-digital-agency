@@ -4,7 +4,7 @@
  */
 import { Link } from "wouter";
 import SignalLogo from "@/components/SignalLogo";
-import { contactLabels } from "@/data/company";
+import { company, contactLabels } from "@/data/company";
 
 export default function SiteFooter() {
   return (
@@ -23,12 +23,16 @@ export default function SiteFooter() {
           <a href="/#services">Ведение кабинетов</a>
           <a href="/#services">Аналитика</a>
         </div>
-        <div className="footer-nav-column">
-          <p className="footer-label">Информация</p>
-          <Link href="/contacts">Контакты</Link>
+        <div className="footer-nav-column footer-details-column">
+          <p className="footer-label">Реквизиты и контакты</p>
+          <strong className="footer-legal-name">{company.legalName}</strong>
+          <a href={`tel:${company.phone.replace(/\\s/g, "")}`}>{company.phone}</a>
+          <a href={`mailto:${company.email}`}>{company.email}</a>
+          <span className="footer-muted">ИНН: {contactLabels.inn}</span>
+          <span className="footer-muted">Йошкар-Ола</span>
+          <Link href="/contacts">Полные контакты и карта</Link>
           <Link href="/privacy-policy">Политика конфиденциальности</Link>
           <a href="/privacy-policy#consent">Согласие на обработку данных</a>
-          {contactLabels.inn && <span className="footer-muted">ИНН: {contactLabels.inn}</span>}
         </div>
       </div>
       <div className="footer-bottom">

@@ -3,6 +3,8 @@ import { getSessionCookieOptions } from "./_core/cookies";
 import { systemRouter } from "./_core/systemRouter";
 import { publicProcedure, router } from "./_core/trpc";
 import { z } from "zod";
+import { ENV } from "./_core/env";
+import { isEmailConfigured, sendContactMail } from "./email";
 
 export const appRouter = router({
     // if you need to use socket.io, read and register route in server/_core/index.ts, all api should start with '/api/' so that the gateway can route correctly
@@ -27,13 +29,19 @@ export const appRouter = router({
         comment: z.string().trim().max(2000).optional(),
         consent: z.literal(true),
       }))
-      .mutation(({ input }) => ({
-        accepted: false,
-        configured: false,
-        recipient: "eridpro@yandex.ru",
-        message: "Почтовый канал ещё не подключён. Данные прошли серверную проверку и готовы к отправке после настройки SMTP.",
-        fields: input,
-      })),
+      .mutation(async ({ input }) => {
+        const configured = isEmailConfigured();
+        if (ENV.isProduction && configured) {
+          await sendContactMail(input);
+          return { accepted: true, configured: true, recipient: "eridpro@yandex.ru", message: "Заявка отправлена." } as const;
+        }
+        return {
+          accepted: false,
+          configured,
+          recipient: "eridpro@yandex.ru",
+          message: configured ? "Заявка проверена в demo-режиме; отправка включится в production." : "SMTP ещё не настроен.",
+        } as const;
+      }),
   }),
 
   // TODO: add feature routers here, e.g.

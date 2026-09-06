@@ -351,3 +351,9 @@ body[data-cursor-state="active"] .custom-cursor { width: 43px; height: 43px; mar
 
 
 .map-external-link { display: inline-flex; align-items: center; gap: 7px; margin-top: 18px; color: #d6a85c; font-family: "Manrope", sans-serif; font-size: 10px; font-weight: 700; letter-spacing: .04em; text-decoration: none; transition: gap 180ms ease, color 180ms ease; }.map-external-link:hover, .map-external-link:focus-visible { gap: 11px; color: #f0d99f; }.map-external-link:focus-visible { outline: 1px solid #d6a85c; outline-offset: 5px; }
+
+
+/* Footer trust layer: compact legal identity with clear contact actions. */
+.footer-details-column { min-width: 220px; }.footer-legal-name { display: block; max-width: 220px; margin-bottom: 7px; color: #eceeea; font-size: 12px; font-weight: 600; line-height: 1.35; }.footer-details-column a[href^="tel"], .footer-details-column a[href^="mailto"] { color: #d6a85c; font-size: 13px; }.footer-details-column a[href^="tel"]:hover, .footer-details-column a[href^="mailto"]:hover, .footer-details-column a[href^="tel"]:focus-visible, .footer-details-column a[href^="mailto"]:focus-visible { color: #f0d99f; }.contact-detail-link { color: #e7c982; text-decoration: none; transition: color 180ms ease; }.contact-detail-link:hover, .contact-detail-link:focus-visible { color: #f3dfac; }.contact-detail-link:focus-visible { outline: 1px solid #d6a85c; outline-offset: 4px; }
+:root[data-theme="light"] .footer-legal-name { color: #171a1d; }
+@media (max-width: 540px) { .footer-details-column { min-width: 0; } }

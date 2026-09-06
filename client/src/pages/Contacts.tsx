@@ -46,7 +46,7 @@ export default function Contacts() {
             {details.length > 0 ? details.map(([label, value]) => (
               <div key={label}>
                 <dt>{label}</dt>
-                <dd>{value}</dd>
+                <dd>{label === "Телефон" ? <a className="contact-detail-link" href={`tel:${String(value).replace(/\\s/g, "")}`}>{value}</a> : label === "Email" ? <a className="contact-detail-link" href={`mailto:${value}`}>{value}</a> : value}</dd>
               </div>
             )) : <div className="contacts-empty"><dt>ФОРМАТ СВЯЗИ</dt><dd>Оставьте задачу через форму на главной странице — это позволит начать диалог в подходящем контексте.</dd></div>}
           </dl>

@@ -24,6 +24,7 @@ import { Link } from "wouter";
 import SiteFooter from "@/components/SiteFooter";
 import SiteHeader from "@/components/SiteHeader";
 import { company } from "@/data/company";
+import { trpc } from "@/lib/trpc";
 
 const services = [
   { number: "01", title: "Контекстная\nреклама", text: "Работа с поисковым спросом, структурой кампаний, объявлениями, семантикой и аналитикой.", icon: Crosshair, detail: "ПОИСКОВЫЙ СПРОС" },
@@ -101,6 +102,8 @@ export default function Home() {
   const [sent, setSent] = useState(false);
   const [openFaq, setOpenFaq] = useState<number | null>(0);
   const [formErrors, setFormErrors] = useState<Record<string, string>>({});
+  const [formNotice, setFormNotice] = useState("");
+  const contactSubmit = trpc.contact.submit.useMutation();
 
   useEffect(() => {
     document.title = "Цифровое рекламное агентство — контекстная и таргетированная реклама";
@@ -133,13 +136,15 @@ export default function Home() {
     return () => schema.remove();
   }, []);
 
-  const handleSubmit = (event: FormEvent<HTMLFormElement>) => {
+  const handleSubmit = async (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     const form = event.currentTarget;
     const values = new FormData(form);
     const name = String(values.get("name") ?? "").trim();
+    const companyName = String(values.get("company") ?? "").trim();
     const phone = String(values.get("phone") ?? "").trim();
     const email = String(values.get("email") ?? "").trim();
+    const comment = String(values.get("comment") ?? "").trim();
     const consent = values.get("consent") === "on";
     const nextErrors: Record<string, string> = {};
     if (name.length < 2) nextErrors.name = "Укажите имя — минимум 2 символа.";
@@ -147,12 +152,20 @@ export default function Home() {
     if (!/^[^\\s@]+@[^\\s@]+\\.[^\\s@]+$/.test(email)) nextErrors.email = "Введите корректный email.";
     if (!consent) nextErrors.consent = "Нужно согласие на обработку данных.";
     setFormErrors(nextErrors);
+    setFormNotice("");
     if (Object.keys(nextErrors).length > 0) {
       setSent(false);
       return;
     }
-    setSent(true);
-    form.reset();
+    try {
+      const result = await contactSubmit.mutateAsync({ name, company: companyName || undefined, phone, email, comment: comment || undefined, consent: true });
+      setSent(true);
+      setFormNotice(result.message);
+      form.reset();
+    } catch {
+      setSent(false);
+      setFormNotice("Не удалось подготовить заявку. Проверьте соединение и попробуйте ещё раз.");
+    }
   };
 
   return (
@@ -263,8 +276,9 @@ export default function Home() {
               </div>
               <label className="full-field"><span>Комментарий</span><textarea name="comment" rows={3} placeholder="Кратко опишите задачу" /></label>
               <label className={`consent ${formErrors.consent ? "has-error" : ""}`}><input name="consent" type="checkbox" aria-invalid={Boolean(formErrors.consent)} /><span>Я согласен(на) на обработку персональных данных в соответствии с <Link href="/privacy-policy">политикой конфиденциальности</Link>.</span>{formErrors.consent && <small className="field-error">{formErrors.consent}</small>}</label>
-              <button className="button button-primary form-submit" type="submit"><span>{sent ? "Обращение подготовлено" : "Отправить обращение"}</span>{sent ? <Sparkles size={17} /> : <Send size={17} />}</button>
-              {sent && <div className="form-success-state" role="status" aria-live="polite"><span className="success-mark"><Sparkles size={17} /></span><div><strong>Заявка прошла проверку</strong><p>Форма работает в demo-режиме и готова к подключению корпоративной почты или CRM.</p></div></div>}
+              <button className="button button-primary form-submit" type="submit" disabled={contactSubmit.isPending}><span>{contactSubmit.isPending ? "Проверяем заявку…" : sent ? "Обращение подготовлено" : "Отправить обращение"}</span>{sent ? <Sparkles size={17} /> : <Send size={17} />}</button>
+              {sent && <div className="form-success-state" role="status" aria-live="polite"><span className="success-mark"><Sparkles size={17} /></span><div><strong>Заявка прошла проверку</strong><p>{formNotice}</p></div></div>}
+              {!sent && formNotice && <div className="form-submit-error" role="alert">{formNotice}</div>}
             </form>
           </div>
         </section>
