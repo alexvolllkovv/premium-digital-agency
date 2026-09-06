@@ -14,8 +14,8 @@ import Contacts from "./pages/Contacts";
 import Home from "./pages/Home";
 import NotFound from "./pages/NotFound";
 import PrivacyPolicy from "./pages/PrivacyPolicy";
-
 function Router() {
+  // make sure to consider if you need authentication for certain routes
   return (
     <Switch>
       <Route path="/" component={Home} />
