@@ -100,6 +100,7 @@ function SectionTag({ children }: { children: string }) {
 export default function Home() {
   const [sent, setSent] = useState(false);
   const [openFaq, setOpenFaq] = useState<number | null>(0);
+  const [formErrors, setFormErrors] = useState<Record<string, string>>({});
 
   useEffect(() => {
     document.title = "Цифровое рекламное агентство — контекстная и таргетированная реклама";
@@ -134,7 +135,24 @@ export default function Home() {
 
   const handleSubmit = (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
+    const form = event.currentTarget;
+    const values = new FormData(form);
+    const name = String(values.get("name") ?? "").trim();
+    const phone = String(values.get("phone") ?? "").trim();
+    const email = String(values.get("email") ?? "").trim();
+    const consent = values.get("consent") === "on";
+    const nextErrors: Record<string, string> = {};
+    if (name.length < 2) nextErrors.name = "Укажите имя — минимум 2 символа.";
+    if (!/^[+]?([0-9()\\s-]){10,}$/.test(phone)) nextErrors.phone = "Проверьте номер телефона.";
+    if (!/^[^\\s@]+@[^\\s@]+\\.[^\\s@]+$/.test(email)) nextErrors.email = "Введите корректный email.";
+    if (!consent) nextErrors.consent = "Нужно согласие на обработку данных.";
+    setFormErrors(nextErrors);
+    if (Object.keys(nextErrors).length > 0) {
+      setSent(false);
+      return;
+    }
     setSent(true);
+    form.reset();
   };
 
   return (
@@ -236,12 +254,17 @@ export default function Home() {
           <img className="contact-art" src="/manus-storage/closing-orbit_abe4c2dc.png" alt="Абстрактная тёмная композиция с золотой орбитой" loading="lazy" />
           <div className="contact-inner">
             <div className="contact-copy"><SectionTag>09 / КОНТАКТЫ</SectionTag><h2>Обсудим<br /><em>задачу?</em></h2><p>Расскажите, что хотите получить от digital-рекламы. Чем точнее исходный контекст, тем предметнее будет первый разговор.</p><Link className="text-link" href="/contacts">Контактная информация <ArrowUpRight size={16} /></Link></div>
-            <form className="contact-form" onSubmit={handleSubmit}>
-              <div className="form-grid"><label><span>Имя</span><input name="name" type="text" autoComplete="name" required placeholder="Как к вам обращаться" /></label><label><span>Компания</span><input name="company" type="text" autoComplete="organization" placeholder="Название компании" /></label><label><span>Телефон</span><input name="phone" type="tel" autoComplete="tel" required placeholder="+7" /></label><label><span>Email</span><input name="email" type="email" autoComplete="email" required placeholder="name@company.ru" /></label></div>
+            <form className={`contact-form ${sent ? "is-sent" : ""}`} onSubmit={handleSubmit} noValidate>
+              <div className="form-grid">
+                <label className={formErrors.name ? "has-error" : ""}><span>Имя</span><input name="name" type="text" autoComplete="name" aria-invalid={Boolean(formErrors.name)} aria-describedby={formErrors.name ? "form-error-name" : undefined} placeholder="Как к вам обращаться" />{formErrors.name && <small id="form-error-name" className="field-error">{formErrors.name}</small>}</label>
+                <label><span>Компания</span><input name="company" type="text" autoComplete="organization" placeholder="Название компании" /></label>
+                <label className={formErrors.phone ? "has-error" : ""}><span>Телефон</span><input name="phone" type="tel" autoComplete="tel" aria-invalid={Boolean(formErrors.phone)} aria-describedby={formErrors.phone ? "form-error-phone" : undefined} placeholder="+7" />{formErrors.phone && <small id="form-error-phone" className="field-error">{formErrors.phone}</small>}</label>
+                <label className={formErrors.email ? "has-error" : ""}><span>Email</span><input name="email" type="email" autoComplete="email" aria-invalid={Boolean(formErrors.email)} aria-describedby={formErrors.email ? "form-error-email" : undefined} placeholder="name@company.ru" />{formErrors.email && <small id="form-error-email" className="field-error">{formErrors.email}</small>}</label>
+              </div>
               <label className="full-field"><span>Комментарий</span><textarea name="comment" rows={3} placeholder="Кратко опишите задачу" /></label>
-              <label className="consent"><input type="checkbox" required /><span>Я согласен(на) на обработку персональных данных в соответствии с <Link href="/privacy-policy">политикой конфиденциальности</Link>.</span></label>
-              <button className="button button-primary form-submit" type="submit"><span>Отправить обращение</span><Send size={17} /></button>
-              {sent && <p className="form-notice" aria-live="polite"><span>●</span> Форма готова к подключению корпоративного канала связи или CRM.</p>}
+              <label className={`consent ${formErrors.consent ? "has-error" : ""}`}><input name="consent" type="checkbox" aria-invalid={Boolean(formErrors.consent)} /><span>Я согласен(на) на обработку персональных данных в соответствии с <Link href="/privacy-policy">политикой конфиденциальности</Link>.</span>{formErrors.consent && <small className="field-error">{formErrors.consent}</small>}</label>
+              <button className="button button-primary form-submit" type="submit"><span>{sent ? "Обращение подготовлено" : "Отправить обращение"}</span>{sent ? <Sparkles size={17} /> : <Send size={17} />}</button>
+              {sent && <div className="form-success-state" role="status" aria-live="polite"><span className="success-mark"><Sparkles size={17} /></span><div><strong>Заявка прошла проверку</strong><p>Форма работает в demo-режиме и готова к подключению корпоративной почты или CRM.</p></div></div>}
             </form>
           </div>
         </section>

@@ -28,7 +28,7 @@ export default function SiteFooter() {
           <Link href="/contacts">Контакты</Link>
           <Link href="/privacy-policy">Политика конфиденциальности</Link>
           <a href="/privacy-policy#consent">Согласие на обработку данных</a>
-          {contactLabels.inn !== "Будет добавлен перед публикацией" && <span className="footer-muted">ИНН: {contactLabels.inn}</span>}
+          {contactLabels.inn && <span className="footer-muted">ИНН: {contactLabels.inn}</span>}
         </div>
       </div>
       <div className="footer-bottom">

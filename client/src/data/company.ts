@@ -4,21 +4,22 @@
  */
 export const company = {
   name: "Цифровое рекламное агентство",
+  legalName: "ИП Лобанов Валерий Алексеевич",
   shortName: "Цифровое рекламное\nагентство",
   description:
     "Контекстная и таргетированная реклама, SMM, ведение рекламных кабинетов и аналитика рекламных кампаний.",
-  phone: "",
-  email: "",
-  legalAddress: "",
-  inn: "",
+  phone: "+79877332525",
+  email: "eridpro@yandex.ru",
+  legalAddress: "улица Степана Разина, 84А, Йошкар-Ола, Республика Марий Эл, 424006",
+  inn: "121529808124",
   ogrnip: "",
-  siteUrl: "",
+  siteUrl: "https://eridpro.ru",
 } as const;
 
 export const contactLabels = {
-  phone: company.phone || "Будет добавлен перед публикацией",
-  email: company.email || "Будет добавлен перед публикацией",
-  legalAddress: company.legalAddress || "Будет добавлен перед публикацией",
-  inn: company.inn || "Будет добавлен перед публикацией",
-  ogrnip: company.ogrnip || "Будет добавлен перед публикацией",
+  phone: company.phone,
+  email: company.email,
+  legalAddress: company.legalAddress,
+  inn: company.inn,
+  ogrnip: company.ogrnip,
 } as const;

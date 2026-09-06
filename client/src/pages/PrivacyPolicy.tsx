@@ -29,7 +29,7 @@ export default function PrivacyPolicy() {
             <p className="section-number">01</p>
             <h2>Общие положения</h2>
             <p>Настоящая политика описывает подход к обработке персональных данных, которые пользователь добровольно указывает в форме обратной связи на сайте «{company.name}».</p>
-            <p>Оператором для целей настоящей политики является «{company.name}». Идентификационные сведения и контакт для обращений по вопросам данных публикуются в разделе «Контакты» при их наличии.</p>
+            <p>Оператором для целей настоящей политики является {company.legalName}, осуществляющий деятельность под обозначением «{company.name}». ИНН оператора: {company.inn}. Контакт для обращений по вопросам обработки данных: {company.email}, {company.phone}.</p>
           </section>
           <section>
             <p className="section-number">02</p>
@@ -48,6 +48,11 @@ export default function PrivacyPolicy() {
           </section>
           <section>
             <p className="section-number">05</p>
+            <h2>Реквизиты оператора</h2>
+            <p>{company.legalName}, ИНН {company.inn}. Юридический адрес: {company.legalAddress}. Электронная почта: {company.email}. Телефон: {company.phone}.</p>
+          </section>
+          <section>
+            <p className="section-number">06</p>
             <h2>Обновление документа</h2>
             <p>Текст может быть изменён при обновлении способов обработки данных или юридически значимых сведений. Актуальная версия публикуется по этому адресу.</p>
           </section>

@@ -8,6 +8,7 @@ import { TooltipProvider } from "@/components/ui/tooltip";
 import { Route, Switch } from "wouter";
 import ErrorBoundary from "./components/ErrorBoundary";
 import CustomCursor from "./components/CustomCursor";
+import { company } from "./data/company";
 import { ThemeProvider } from "./contexts/ThemeContext";
 import Contacts from "./pages/Contacts";
 import Home from "./pages/Home";
@@ -34,7 +35,7 @@ export default function App() {
       canonical.rel = "canonical";
       document.head.appendChild(canonical);
     }
-    canonical.href = window.location.href;
+    canonical.href = `${company.siteUrl}${window.location.pathname}`;
   }, []);
 
   return <ErrorBoundary><ThemeProvider defaultTheme="dark" switchable><TooltipProvider><Toaster /><CustomCursor /><Router /></TooltipProvider></ThemeProvider></ErrorBoundary>;
