@@ -27,6 +27,7 @@ export const appRouter = router({
         phone: z.string().trim().min(10).max(32),
         email: z.string().email().max(320),
         comment: z.string().trim().max(2000).optional(),
+        selectedService: z.string().trim().max(160).optional(),
         consent: z.literal(true),
       }))
       .mutation(async ({ input }) => {

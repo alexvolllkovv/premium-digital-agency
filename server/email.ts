@@ -9,6 +9,7 @@ export type ContactMailInput = {
   phone: string;
   email: string;
   comment?: string;
+  selectedService?: string;
 };
 
 export function isEmailConfigured() {
@@ -31,12 +32,13 @@ export async function sendContactMail(input: ContactMailInput) {
     from: `Сайт eridpro.ru <${recipient}>`,
     to: recipient,
     replyTo: input.email,
-    subject: `Новая заявка с сайта: ${input.name}`,
+      subject: `Новая заявка с сайта: ${input.selectedService ? `${input.selectedService} — ` : ""}${input.name}`,
     text: [
       `Имя: ${input.name}`,
       `Компания: ${input.company || "Не указана"}`,
       `Телефон: ${input.phone}`,
       `Email: ${input.email}`,
+      `Услуга: ${input.selectedService || "Не выбрана"}`,
       `Комментарий: ${input.comment || "Не указан"}`,
     ].join("\\n"),
   });

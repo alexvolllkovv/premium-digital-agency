@@ -5,9 +5,15 @@
 import { FormEvent, useEffect, useState } from "react";
 import {
   ArrowDownRight,
+  ArrowLeft,
+  ArrowRight,
   ArrowUpRight,
   BarChart3,
   ChartNoAxesCombined,
+  Compass,
+  Rocket,
+  ScanSearch,
+  ShieldCheck,
   CircleDot,
   Crosshair,
   Gauge,
@@ -36,10 +42,10 @@ const services = [
 ];
 
 const teamRoles = [
-  ["01", "Стратегия", "Связываем бизнес-задачу, аудиторию и рекламный контур в одну понятную систему."],
-  ["02", "Запуск", "Собираем кампании, креативы и аналитику с фокусом на проверяемые гипотезы."],
-  ["03", "Аналитика", "Переводим показатели в выводы, приоритеты и следующие рабочие решения."],
-  ["04", "Контроль", "Следим за изменениями, объясняем результаты и держим коммуникацию прозрачной."],
+  ["01", "Стратегия", "Связываем бизнес-задачу, аудиторию и рекламный контур в одну понятную систему.", Compass],
+  ["02", "Запуск", "Собираем кампании, креативы и аналитику с фокусом на проверяемые гипотезы.", Rocket],
+  ["03", "Аналитика", "Переводим показатели в выводы, приоритеты и следующие рабочие решения.", ScanSearch],
+  ["04", "Контроль", "Следим за изменениями, объясняем результаты и держим коммуникацию прозрачной.", ShieldCheck],
 ] as const;
 
 const testimonials = [
@@ -134,6 +140,8 @@ function SectionTag({ children }: { children: string }) {
 export default function Home() {
   const [sent, setSent] = useState(false);
   const [openFaq, setOpenFaq] = useState<number | null>(0);
+  const [testimonialIndex, setTestimonialIndex] = useState(0);
+  const [selectedService, setSelectedService] = useState("");
   const [formErrors, setFormErrors] = useState<Record<string, string>>({});
   const [formNotice, setFormNotice] = useState("");
   const contactSubmit = trpc.contact.submit.useMutation();
@@ -178,6 +186,7 @@ export default function Home() {
     const phone = String(values.get("phone") ?? "").trim();
     const email = String(values.get("email") ?? "").trim();
     const comment = String(values.get("comment") ?? "").trim();
+    const selectedServiceValue = String(values.get("selectedService") ?? selectedService).trim();
     const consent = values.get("consent") === "on";
     const nextErrors: Record<string, string> = {};
     if (name.length < 2) nextErrors.name = "Укажите имя — минимум 2 символа.";
@@ -191,7 +200,7 @@ export default function Home() {
       return;
     }
     try {
-      const result = await contactSubmit.mutateAsync({ name, company: companyName || undefined, phone, email, comment: comment || undefined, consent: true });
+      const result = await contactSubmit.mutateAsync({ name, company: companyName || undefined, phone, email, comment: comment || undefined, selectedService: selectedServiceValue || undefined, consent: true });
       setSent(true);
       setFormNotice(result.message);
       form.reset();
@@ -257,7 +266,7 @@ export default function Home() {
                 <h3>{service.title.split("\n").map((line) => <span key={line}>{line}</span>)}</h3>
                 <p>{service.text}</p>
                 <p className="service-price">{service.price}</p>
-                <a className="service-card-action" href="#contacts">Обсудить услугу <ArrowUpRight size={16} /></a>
+                <a className="service-card-action" href="#contacts" onClick={() => setSelectedService(service.title.replace("\n", " "))}>Обсудить услугу <ArrowUpRight size={16} /></a>
                 <span className="service-arrow" aria-hidden="true"><ArrowUpRight size={18} /></span>
               </article>;
             })}
@@ -266,12 +275,15 @@ export default function Home() {
 
         <section className="team-section section-frame" id="team" data-reveal="section">
           <div className="section-head split-head"><div><SectionTag>03 / КОМАНДА И РОЛИ</SectionTag><h2>Роли, которые<br /><em>держат систему.</em></h2></div><p>Работа строится вокруг понятных компетенций: от стратегии и запуска до аналитики и контроля. Без вымышленных биографий — только конкретные зоны ответственности.</p></div>
-          <div className="team-role-grid">{teamRoles.map(([number, title, text]) => <article className="team-role-card" data-reveal="card" key={number}><span className="team-role-number">{number}</span><div className="team-role-mark" aria-hidden="true"><i /><b /></div><h3>{title}</h3><p>{text}</p><span className="team-role-meta">КОМПЕТЕНЦИЯ / 0{number}</span></article>)}</div>
+          <div className="team-role-grid">{teamRoles.map(([number, title, text, Icon]) => <article className="team-role-card" data-reveal="card" tabIndex={0} key={number}><span className="team-role-number">{number}</span><div className="team-role-mark" aria-hidden="true"><Icon size={26} strokeWidth={1.25} /><i /><b /></div><h3>{title}</h3><p>{text}</p><span className="team-role-meta">КОМПЕТЕНЦИЯ / 0{number}</span></article>)}</div>
         </section>
 
         <section className="testimonials-section section-frame" id="testimonials" data-reveal="section">
-          <div className="section-head split-head"><div><SectionTag>04 / ОТЗЫВЫ</SectionTag><h2>Спокойная работа.<br /><em>Понятная коммуникация.</em></h2></div><p>Анонимные отзывы, предоставленные заказчиком. Мы не добавляем рейтинги, имена или измеримые обещания без подтверждённых данных.</p></div>
-          <div className="testimonials-grid">{testimonials.map((quote, index) => { const [author, city] = testimonialAuthors[index]; return <article className="testimonial-card" data-reveal="card" key={quote}><span className="testimonial-number">0{index + 1}</span><p>«{quote}»</p><span className="testimonial-meta">{author} · {city}</span></article>; })}</div>
+          <div className="section-head split-head"><div><SectionTag>04 / ОТЗЫВЫ</SectionTag><h2>Спокойная работа.<br /><em>Понятная коммуникация.</em></h2></div><p>Реальные отзывы из переписок, опубликованные в сокращённом анонимизированном формате.</p></div>
+          <div className="testimonials-carousel" data-reveal="card" aria-roledescription="carousel" aria-label="Отзывы клиентов">
+            <article className="testimonial-card testimonial-slide" aria-live="polite"><span className="testimonial-number">0{testimonialIndex + 1}</span><p>«{testimonials[testimonialIndex]}»</p><span className="testimonial-meta">{testimonialAuthors[testimonialIndex][0]} · {testimonialAuthors[testimonialIndex][1]}</span></article>
+            <div className="testimonial-controls"><button type="button" className="carousel-button" aria-label="Предыдущий отзыв" onClick={() => setTestimonialIndex((testimonialIndex - 1 + testimonials.length) % testimonials.length)}><ArrowLeft size={16} /></button><div className="testimonial-dots" role="tablist" aria-label="Выбор отзыва">{testimonials.map((_, index) => <button type="button" role="tab" aria-selected={testimonialIndex === index} aria-label={`Отзыв ${index + 1}`} className={testimonialIndex === index ? "is-active" : ""} key={index} onClick={() => setTestimonialIndex(index)} />)}</div><button type="button" className="carousel-button" aria-label="Следующий отзыв" onClick={() => setTestimonialIndex((testimonialIndex + 1) % testimonials.length)}><ArrowRight size={16} /></button></div>
+          </div>
         </section>
 
         <section className="analysis-section section-frame" id="analysis" data-reveal="section">
@@ -319,6 +331,7 @@ export default function Home() {
                 <label className={formErrors.phone ? "has-error" : ""}><span>Телефон</span><input name="phone" type="tel" autoComplete="tel" aria-invalid={Boolean(formErrors.phone)} aria-describedby={formErrors.phone ? "form-error-phone" : undefined} placeholder="+7" />{formErrors.phone && <small id="form-error-phone" className="field-error">{formErrors.phone}</small>}</label>
                 <label className={formErrors.email ? "has-error" : ""}><span>Email</span><input name="email" type="email" autoComplete="email" aria-invalid={Boolean(formErrors.email)} aria-describedby={formErrors.email ? "form-error-email" : undefined} placeholder="name@company.ru" />{formErrors.email && <small id="form-error-email" className="field-error">{formErrors.email}</small>}</label>
               </div>
+              <label className="full-field"><span>Выбранная услуга</span><input name="selectedService" value={selectedService} onChange={(event) => setSelectedService(event.target.value)} placeholder="Можно выбрать в карточке услуги" /></label>
               <label className="full-field"><span>Комментарий</span><textarea name="comment" rows={3} placeholder="Кратко опишите задачу" /></label>
               <label className={`consent ${formErrors.consent ? "has-error" : ""}`}><input name="consent" type="checkbox" aria-invalid={Boolean(formErrors.consent)} /><span>Я согласен(на) на обработку персональных данных в соответствии с <Link href="/privacy-policy">политикой конфиденциальности</Link>.</span>{formErrors.consent && <small className="field-error">{formErrors.consent}</small>}</label>
               <button className="button button-primary form-submit" type="submit" disabled={contactSubmit.isPending}><span>{contactSubmit.isPending ? "Проверяем заявку…" : sent ? "Обращение подготовлено" : "Отправить обращение"}</span>{sent ? <Sparkles size={17} /> : <Send size={17} />}</button>
