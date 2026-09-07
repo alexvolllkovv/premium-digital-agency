@@ -10,6 +10,8 @@ import { useTheme } from "@/contexts/ThemeContext";
 const navigation = [
   ["О компании", "#about"],
   ["Услуги", "#services"],
+  ["Команда", "#team"],
+  ["Отзывы", "#testimonials"],
   ["Подход", "#approach"],
   ["Процесс", "#process"],
   ["FAQ", "#faq"],
