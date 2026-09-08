@@ -53,10 +53,10 @@ export default function Contacts() {
         </section>
         <section className="map-placeholder live-map-panel" aria-label="Интерактивная карта юридического адреса">
           <div className="map-noise" aria-hidden="true" />
-          <div className="map-copy"><MapPin size={22} /><span className="section-number">АДРЕС</span><h2>Йошкар-Ола</h2><p>{company.legalAddress}</p><a className="map-external-link" href="https://yandex.ru/maps/?ll=47.8956%2C56.6327&z=16&text=%D1%83%D0%BB%D0%B8%D1%86%D0%B0%20%D0%A1%D1%82%D0%B5%D0%BF%D0%B0%D0%BD%D0%B0%20%D0%A0%D0%B0%D0%B7%D0%B8%D0%BD%D0%B0%2C%2084%D0%90%2C%20%D0%99%D0%BE%D1%88%D0%BA%D0%B0%D1%80-%D0%9E%D0%BB%D0%B0" target="_blank" rel="noreferrer">Открыть в Яндекс Картах <ArrowUpRight size={14} /></a></div>
-          <div className="map-coordinate map-coordinate-one" aria-hidden="true">РЕСПУБЛИКА МАРИЙ ЭЛ / 424006</div>
-          <div className="map-coordinate map-coordinate-two" aria-hidden="true">УЛИЦА СТЕПАНА РАЗИНА / 84А</div>
-          <iframe className="contacts-map-live" title="Яндекс Карты — юридический адрес ИП Лобанова Валерия Алексеевича" src="https://yandex.ru/map-widget/v1/?ll=47.8956%2C56.6327&z=16&pt=47.8956%2C56.6327%2Cpm2rdm&mode=search&text=%D1%83%D0%BB%D0%B8%D1%86%D0%B0%20%D0%A1%D1%82%D0%B5%D0%BF%D0%B0%D0%BD%D0%B0%20%D0%A0%D0%B0%D0%B7%D0%B8%D0%BD%D0%B0%2C%2084%D0%90%2C%20%D0%99%D0%BE%D1%88%D0%BA%D0%B0%D1%80-%D0%9E%D0%BB%D0%B0" loading="eager" referrerPolicy="no-referrer-when-downgrade" allowFullScreen />
+          <div className="map-copy"><MapPin size={22} /><span className="section-number">АДРЕС</span><h2>Йошкар-Ола</h2><p>{company.legalAddress}</p><a className="map-external-link" href="https://yandex.ru/maps/?z=16&text=%D1%83%D0%BB%D0%B8%D1%86%D0%B0%20%D0%94%D0%B8%D0%BC%D0%B8%D1%82%D1%80%D0%BE%D0%B2%D0%B0%2C%2058%2C%20%D0%99%D0%BE%D1%88%D0%BA%D0%B0%D1%80-%D0%9E%D0%BB%D0%B0" target="_blank" rel="noreferrer">Открыть в Яндекс Картах <ArrowUpRight size={14} /></a></div>
+          <div className="map-coordinate map-coordinate-one" aria-hidden="true">РЕСПУБЛИКА МАРИЙ ЭЛ / 424019</div>
+          <div className="map-coordinate map-coordinate-two" aria-hidden="true">УЛИЦА ДИМИТРОВА / 58</div>
+          <iframe className="contacts-map-live" title="Яндекс Карты — юридический адрес ИП Лобанова Валерия Алексеевича" src="https://yandex.ru/map-widget/v1/?z=16&mode=search&text=%D1%83%D0%BB%D0%B8%D1%86%D0%B0%20%D0%94%D0%B8%D0%BC%D0%B8%D1%82%D1%80%D0%BE%D0%B2%D0%B0%2C%2058%2C%20%D0%99%D0%BE%D1%88%D0%BA%D0%B0%D1%80-%D0%9E%D0%BB%D0%B0" loading="eager" referrerPolicy="no-referrer-when-downgrade" allowFullScreen />
         </section>
         <Link className="legal-contact-link" href="/#contacts">Вернуться к форме обращения <ArrowUpRight size={17} /></Link>
       </main>
