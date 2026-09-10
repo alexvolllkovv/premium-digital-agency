@@ -191,7 +191,7 @@ export default function Home() {
     const nextErrors: Record<string, string> = {};
     if (name.length < 2) nextErrors.name = "Укажите имя — минимум 2 символа.";
     if (!/^[+]?([0-9()\\s-]){10,}$/.test(phone)) nextErrors.phone = "Проверьте номер телефона.";
-    if (!/^[^\\s@]+@[^\\s@]+\\.[^\\s@]+$/.test(email)) nextErrors.email = "Введите корректный email.";
+    if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) nextErrors.email = "Введите корректный email.";
     if (!consent) nextErrors.consent = "Нужно согласие на обработку данных.";
     setFormErrors(nextErrors);
     setFormNotice("");
