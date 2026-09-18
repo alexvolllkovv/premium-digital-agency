@@ -1,5 +1,5 @@
 import { COOKIE_NAME } from "../shared/const.js";
-import { getSessionCookieOptions } from "./_core/cookies";
+import { getSessionCookieOptions } from "./_core/cookies.js";
 import { systemRouter } from "./_core/systemRouter";
 import { publicProcedure, router } from "./_core/trpc";
 import { z } from "zod";
