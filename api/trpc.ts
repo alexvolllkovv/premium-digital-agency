@@ -1,4 +1,4 @@
-import { createExpressMiddleware } from "@trpc/server/adapters/express";
+import { fetchRequestHandler } from "@trpc/server/adapters/fetch";
 import { initTRPC } from "@trpc/server";
 import { z } from "zod";
 import nodemailer from "nodemailer";
@@ -71,6 +71,12 @@ const appRouter = t.router({
   }),
 });
 
-export default createExpressMiddleware({
-  router: appRouter,
-});
+const handler = (req: Request) =>
+  fetchRequestHandler({
+    endpoint: "/api/trpc",
+    req,
+    router: appRouter,
+    createContext: () => ({}),
+  });
+
+export default handler;
