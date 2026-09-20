@@ -71,12 +71,18 @@ const appRouter = t.router({
   }),
 });
 
-const handler = (req: Request) =>
-  fetchRequestHandler({
+const handler = (req: Request) => {
+  const url = new URL(
+    req.url,
+    `https://${req.headers.get("host") || "eridpro.ru"}`
+  );
+
+  return fetchRequestHandler({
     endpoint: "/api/trpc",
-    req,
+    req: new Request(url, req),
     router: appRouter,
     createContext: () => ({}),
   });
+};
 
 export default handler;
